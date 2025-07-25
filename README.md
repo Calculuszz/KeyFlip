@@ -6,9 +6,8 @@
 **target**
 1.คนไทย 
 2.Gen z ,Alpha
-
-🗺️ Roadmap สร้าง Prototype เว็บ "ยังไม่ได้คิดชื่อ" ในเวลา 7hr 
-19.00 - 
+**part 1**
+🗺️ Roadmap สร้าง Prototype เว็บ "KeyFlip" ในเวลา 4 hr 
 
 🧱 Phase 1: Plan & Define
 เป้าหมาย: สร้างเว็บที่สามารถรับข้อความ และแปลงข้อความที่พิมพ์ผิดภาษา (EN/TH) ได้
@@ -47,5 +46,23 @@
 | 🔁 ปรับปรุงรอบแรก | พัฒนา logic แปลง, เพิ่ม dictionary หรือ AI ช่วยจับภาษา |
 
 **Tool**
--react
--
+-html,css,js
+
+**part2**
+🔍 เป้าหมาย:
+สร้างแอปที่:
+-ทำงานอยู่เบื้องหลัง (Background)
+-ดักจับทุก keystroke แบบ real-time
+-ตรวจว่าผู้ใช้พิมพ์ผิดภาษาไหม (TH/EN)
+-แก้ไขอัตโนมัติ (ลบ + แทนที่)
+
+🛠 Phase 1: Build Prototype บน Windows
+🔄 Phase 2: เพิ่มคุณสมบัติเพิ่มเติม
+| Feature            | รายละเอียด                                  |
+| ------------------ | ------------------------------------------- |
+| ✅ Toggle ON/OFF    | ปุ่ม hotkey (เช่น Ctrl+Shift+K)             |
+| ✅ System tray icon | ใช้ `pystray` แสดงว่า app ทำงานอยู่         |
+| ✅ ตั้งภาษาเป้าหมาย | Auto เปลี่ยน EN→TH หรือ TH→EN               |
+| ✅ Logger           | บันทึกว่ามีการ auto-correct อะไรบ้าง        |
+| ✅ Mode             | Silent / Interactive (แจ้งเตือนก่อนเปลี่ยน) |
+
