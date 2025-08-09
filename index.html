@@ -329,10 +329,35 @@ function render(){
 render();
 
 /** ====== Theme Toggle ====== **/
-document.getElementById('theme').addEventListener('click', ()=>{
-  const pressed = document.getElementById('theme').getAttribute('aria-pressed')==='true';
-  document.getElementById('theme').setAttribute('aria-pressed', String(!pressed));
-  document.documentElement.classList.toggle('light');
+const themeBtn = document.getElementById('theme');
+
+themeBtn.addEventListener('click', ()=>{
+  const pressed = themeBtn.getAttribute('aria-pressed') === 'true';
+  themeBtn.setAttribute('aria-pressed', String(!pressed));
+
+  if(!pressed){
+    // โหมดสว่าง
+    document.documentElement.style.setProperty('--bg','#f7f8fb');
+    document.documentElement.style.setProperty('--card','#ffffff');
+    document.documentElement.style.setProperty('--text','#0d1321');
+    document.documentElement.style.setProperty('--muted','#4b5563');
+    document.documentElement.style.setProperty('--brand','#059669');
+    document.documentElement.style.setProperty('--accent','#2563eb');
+    document.documentElement.style.setProperty('--chip','#eef2ff');
+    document.documentElement.style.setProperty('--chip-active','#e0e7ff');
+    document.documentElement.style.setProperty('--border','#e5e7eb');
+  } else {
+    // โหมดมืด
+    document.documentElement.style.setProperty('--bg','#0b0c0f');
+    document.documentElement.style.setProperty('--card','#14161b');
+    document.documentElement.style.setProperty('--text','#e8eaf0');
+    document.documentElement.style.setProperty('--muted','#a9afbf');
+    document.documentElement.style.setProperty('--brand','#6ee7b7');
+    document.documentElement.style.setProperty('--accent','#60a5fa');
+    document.documentElement.style.setProperty('--chip','#1d212a');
+    document.documentElement.style.setProperty('--chip-active','#2a3342');
+    document.documentElement.style.setProperty('--border','#232733');
+  }
 });
 </script>
 </body>
