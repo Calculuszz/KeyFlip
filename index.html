@@ -69,12 +69,9 @@
   .card-body{padding:14px;display:flex;flex-direction:column;gap:10px}
   .title{font-weight:700}
   .meta{display:flex;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:14px}
-  .modes{display:flex;gap:8px;flex-wrap:wrap}           /* ✅ แสดงสถานะคอร์ส */
-  .mode{
-    display:inline-flex;align-items:center;gap:6px;
-    background:var(--chip);padding:6px 10px;border-radius:999px;font-size:13px
-  }
-  .mode .detail{color:var(--muted);font-size:12px}
+  .onsite{display:inline-flex;align-items:center;gap:6px;
+    background:var(--chip);padding:6px 10px;border-radius:999px;font-size:13px}
+  .onsite .detail{color:var(--muted);font-size:12px}
   .tags{display:flex;gap:6px;flex-wrap:wrap}
   .tag{font-size:12px;background:var(--chip);padding:4px 8px;border-radius:999px;color:var(--muted)}
   .price{display:flex;align-items:baseline;gap:8px}
@@ -126,7 +123,7 @@
   </div>
 
 <script>
-/** ====== ข้อมูลคอร์ส (เพิ่ม modes: Onsite/Online) ====== **/
+/** ====== ข้อมูลคอร์ส (เฉพาะ Onsite) ====== **/
 const courses = [
   {
     id:1,
@@ -144,10 +141,7 @@ const courses = [
     tags:[],
     badge:"ขายดี",
     released:"2025-07-10",
-    modes:[
-      { type:"Onsite", detail:"ศูนย์ชุมชน บางนา (เสาร์–อาทิตย์)" },
-      { type:"Online", detail:"Zoom + ดูย้อนหลัง 60 วัน" }
-    ]
+    onsiteDetail:"ศูนย์ชุมชน บางนา (เสาร์–อาทิตย์)"
   },
   {
     id:2,
@@ -165,9 +159,7 @@ const courses = [
     tags:[],
     badge:"แนะนำ",
     released:"2025-05-22",
-    modes:[
-      { type:"Onsite", detail:"ห้องเรียนดอนเมือง (อุปกรณ์พร้อม)" }
-    ]
+    onsiteDetail:"ห้องเรียนดอนเมือง (อุปกรณ์พร้อม)"
   },
   {
     id:3,
@@ -185,9 +177,7 @@ const courses = [
     tags:[],
     badge:"ลดราคา",
     released:"2025-06-30",
-    modes:[
-      { type:"Online", detail:"Google Meet | เอกสาร PDF ให้ดาวน์โหลด" }
-    ]
+    onsiteDetail:"คลินิกสุขภาพผู้สูงอายุ พระราม 2"
   }
 ];
 
@@ -280,11 +270,11 @@ const grid = document.getElementById('grid');
 const empty = document.getElementById('empty');
 const pageInfo = document.getElementById('pageInfo');
 
-function starSVG(){ return `<svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 1.6l2.4 5 5.5.8-4 3.9.9 5.6L10 14.8 5.2 16.9l.9-5.6-4-3.9 5.5-.8L10 1.6z"/></svg>`}
+function starSVG(){ return `<svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path d="M10 1.6l2.4 5 5.5.8-4 3.9.9 5.6L10 14.8 5.2 16.9l.9-5.6-4-3.9 5.5-.8L10 1.6z"/></svg>`}
 
 function cardHTML(c){
   const rating = `
-    <span class="rating" aria-label="เรตติ้ง ${c.rating} จาก 5 ดาว">
+    <span class="rating">
       ${starSVG()} <strong>${c.rating.toFixed(1)}</strong>
       <span style="color:var(--muted)">(${c.ratingsCount.toLocaleString()})</span>
     </span>
@@ -296,19 +286,14 @@ function cardHTML(c){
     </div>
   `;
   const tags = (c.tags||[]).map(t=>`<span class="tag">${t}</span>`).join('');
-
-  // ✅ แสดงสถานะ Onsite / Online + รายละเอียด
-  const modes = (c.modes||[]).map(m=>`
-    <span class="mode">
-      ${m.type==="Onsite" ? "🏫" : "💻"} ${m.type}
-      <span class="detail">· ${m.detail}</span>
-    </span>
-  `).join('');
+  const onsite = `
+    <span class="onsite">🏫 Onsite <span class="detail">· ${c.onsiteDetail}</span></span>
+  `;
 
   return `
     <article class="card">
       <div class="thumb">
-        <img src="${c.thumbnail}" alt="ภาพตัวอย่างคอร์ส: ${c.title}">
+        <img src="${c.thumbnail}" alt="${c.title}">
         ${c.badge?`<span class="badge">${c.badge}</span>`:''}
       </div>
       <div class="card-body">
@@ -318,13 +303,13 @@ function cardHTML(c){
           <span>🗂️ ${c.category}</span>
           <span>⏱️ ${c.duration}</span>
         </div>
-        <div class="modes">${modes}</div> <!-- สถานะคอร์ส -->
+        ${onsite}
         ${rating}
         <div class="tags">${tags}</div>
         ${price}
         <div class="cta">
-          <button class="btn primary" aria-label="ดูรายละเอียดคอร์ส ${c.title}">รายละเอียด</button>
-          <button class="btn ghost" aria-label="บันทึกคอร์ส ${c.title}">บันทึก</button>
+          <button class="btn primary">รายละเอียด</button>
+          <button class="btn ghost">บันทึก</button>
         </div>
       </div>
     </article>
@@ -336,7 +321,6 @@ function render(){
   const pageItems = paginate(f);
   grid.innerHTML = pageItems.map(cardHTML).join('');
   empty.hidden = f.length>0;
-
   const maxPage = Math.max(1, Math.ceil(f.length/state.perPage));
   pageInfo.textContent = `หน้า ${Math.min(state.page,maxPage)} / ${maxPage}`;
   document.getElementById('prev').disabled = state.page<=1;
@@ -345,32 +329,10 @@ function render(){
 render();
 
 /** ====== Theme Toggle ====== **/
-const themeBtn = document.getElementById('theme');
-themeBtn.addEventListener('click', ()=>{
-  const pressed = themeBtn.getAttribute('aria-pressed')==='true';
-  themeBtn.setAttribute('aria-pressed', String(!pressed));
+document.getElementById('theme').addEventListener('click', ()=>{
+  const pressed = document.getElementById('theme').getAttribute('aria-pressed')==='true';
+  document.getElementById('theme').setAttribute('aria-pressed', String(!pressed));
   document.documentElement.classList.toggle('light');
-  if(document.documentElement.classList.contains('light')){
-    document.documentElement.style.setProperty('--bg','#f7f8fb');
-    document.documentElement.style.setProperty('--card','#ffffff');
-    document.documentElement.style.setProperty('--text','#0d1321');
-    document.documentElement.style.setProperty('--muted','#4b5563');
-    document.documentElement.style.setProperty('--brand','#059669');
-    document.documentElement.style.setProperty('--accent','#2563eb');
-    document.documentElement.style.setProperty('--chip','#eef2ff');
-    document.documentElement.style.setProperty('--chip-active','#e0e7ff');
-    document.documentElement.style.setProperty('--border','#e5e7eb');
-  }else{
-    document.documentElement.style.setProperty('--bg','#0b0c0f');
-    document.documentElement.style.setProperty('--card','#14161b');
-    document.documentElement.style.setProperty('--text','#e8eaf0');
-    document.documentElement.style.setProperty('--muted','#a9afbf');
-    document.documentElement.style.setProperty('--brand','#6ee7b7');
-    document.documentElement.style.setProperty('--accent','#60a5fa');
-    document.documentElement.style.setProperty('--chip','#1d212a');
-    document.documentElement.style.setProperty('--chip-active','#2a3342');
-    document.documentElement.style.setProperty('--border','#232733');
-  }
 });
 </script>
 </body>
